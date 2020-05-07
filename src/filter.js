@@ -7,46 +7,53 @@ const endOfYear = require('date-fns/endOfYear')
 
 const EXPECTED_FORMAT = 'yyyy/MM/dd';
 
-const range = (label, date, days) => {
-  return {
-    label: label,
-    startAt: format(sub(date, { days: days }), EXPECTED_FORMAT),
-    endAt: format(date, EXPECTED_FORMAT)
-  }
-}
-
 const makeFilter = (date) => {
-  const values = [7,28,90,365];
   const filters = [];
+  const days = [7,28,90,365];
+
+  const objGen = (label,startAt,endAt)=>{
+    return {
+      label: label,
+      startAt: startAt,
+      endAt: endAt
+    }
+  }
+
+  const filterObj = (label, date, subtract) => {
+    const newFilter = objGen(
+      label,
+      format(sub(date, { days: subtract }), EXPECTED_FORMAT),
+      format(date, EXPECTED_FORMAT)
+    )
+    return newFilter;
+  }
 
   const filtersByAmountDays = (i) =>{
-    const filter = range(`Últimos ${i} días`, date, i);
+    const filter = filterObj(`Últimos ${i} días`, date, i);
     filters.push(filter);
   }
 
-  values.forEach(filtersByAmountDays);
+  days.forEach(filtersByAmountDays);
 
   for (let i = 1; i <= 3; i++) {
     const yearlyRange = sub(date, {years: i});
-    const obj = {
-      label: format(yearlyRange, 'yyyy'),
-      startAt: format(startOfYear(yearlyRange), EXPECTED_FORMAT),
-      endAt: format(endOfYear(yearlyRange), EXPECTED_FORMAT)
-    }
+    const obj = objGen(
+      format(yearlyRange, 'yyyy'),
+      format(startOfYear(yearlyRange),EXPECTED_FORMAT),
+      format(endOfYear(yearlyRange),EXPECTED_FORMAT)
+    )
     filters.push(obj);
   }
 
   for (let i = 1; i <= 3; i++) {
     const monthlyRange = sub(date, {months: i});
-    const obj = {
-      label: monthlyRange.toLocaleString('es-CO',{month:"long"}),
-      startAt: format(startOfMonth(monthlyRange), EXPECTED_FORMAT),
-      endAt: format(endOfMonth(monthlyRange), EXPECTED_FORMAT)
-    }
+    const obj = objGen(
+      monthlyRange.toLocaleString('es-CO',{month:"long"}),
+      format(startOfMonth(monthlyRange), EXPECTED_FORMAT),
+      format(endOfMonth(monthlyRange), EXPECTED_FORMAT)
+    )
     filters.push(obj);
   }
-  console.log(filters);
-  console.log(sub);
   
   return filters;
 }
