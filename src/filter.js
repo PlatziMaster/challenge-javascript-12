@@ -1,77 +1,54 @@
-import fns from 'date-fns'
-const { format , sub, startOfYear, endOfYear, startOfMonth, endOfMonth, locale} = fns;
+const sub = require('date-fns/sub');
+const format = require('date-fns/format');
+const startOfMonth = require('date-fns/startOfMonth')
+const endOfMonth = require('date-fns/endOfMonth')
+const startOfYear = require('date-fns/startOfYear')
+const endOfYear = require('date-fns/endOfYear')
+
+const EXPECTED_FORMAT = 'yyyy/MM/dd';
+
+const range = (label, date, days) => {
+  return {
+    label: label,
+    startAt: format(sub(date, { days: days }), EXPECTED_FORMAT),
+    endAt: format(date, EXPECTED_FORMAT)
+  }
+}
 
 const makeFilter = (date) => {
-  const expetedFormat =  'yyyy/MM/dd'
-  const last7daysRange = format(sub(date,{days: 7}), expetedFormat);
-  const last28daysRange =  format(sub(date,{days: 28}), expetedFormat);
-  const last90daysRange =  format(sub(date,{days: 90}), expetedFormat);
-  const last365daysRange =  format(sub(date,{days: 365}), expetedFormat);
-  
-  
-  
-  const last7days = {
-    label: 'Últimos 7 días',
-    startAt: last7daysRange,
-    endAt: format(date,expetedFormat)
-  };
-  
-  const last28days = {
-    label: 'Últimos 28 días',
-    startAt: last28daysRange,
-    endAt: format(date,expetedFormat)
-  }
-  
-  const last90days = {
-    label: 'Últimos 90 días',
-    startAt: last90daysRange,
-    endAt: format(date,expetedFormat)
-  }
-  
-  const last365days = {
-    label: 'Últimos 365 días',
-    startAt: last365daysRange,
-    endAt: format(date,expetedFormat)
-  }
-  
-  const datesGenerator = (date) =>{
-    const arr = [];
-    for (let i=1 ; i <= 3; i++){
-      const a = sub(date,{years: i});
-      const y = {
-        label: format(a,'yyyy'),
-        startAt: format(startOfYear(a), expetedFormat),
-        endAt: format (endOfYear(new Date(a)), expetedFormat)
-      }
-      const b = sub(date,{months: i});
-      const z = {
-        label: format(b,'MMMM'),
-        startAt: format (startOfYear(b), expetedFormat),
-        endAt: format (endOfYear(new Date(b)), expetedFormat)
-      }
-      
-      arr.push(z)
-      console.log(`fecha añadida ${z.label} ${z.startAt} ${z.endAt}`);      
-    }
-    
-    
-    return arr;
-  }
-  
-  const arr = datesGenerator(date);
-  
-  const last3years = arr;
+  const values = [7,28,90,365];
+  const filters = [];
 
-          let filters = [last7days, last28days, last90days, last365days, last3years,
-            //    lastquarter
-            // ,quater 
-          ];
-          
-          console.log(filters);
-          console.log(format(date,'MMMM', locale));
-          // return filters;
+  const filtersByAmountDays = (i) =>{
+    const filter = range(`Últimos ${i} días`, date, i);
+    filters.push(filter);
+  }
+
+  values.forEach(filtersByAmountDays);
+
+  for (let i = 1; i <= 3; i++) {
+    const yearlyRange = sub(date, {years: i});
+    const obj = {
+      label: format(yearlyRange, 'yyyy'),
+      startAt: format(startOfYear(yearlyRange), EXPECTED_FORMAT),
+      endAt: format(endOfYear(yearlyRange), EXPECTED_FORMAT)
+    }
+    filters.push(obj);
+  }
+
+  for (let i = 1; i <= 3; i++) {
+    const monthlyRange = sub(date, {months: i});
+    const obj = {
+      label: monthlyRange.toLocaleString('es-CO',{month:"long"}),
+      startAt: format(startOfMonth(monthlyRange), EXPECTED_FORMAT),
+      endAt: format(endOfMonth(monthlyRange), EXPECTED_FORMAT)
+    }
+    filters.push(obj);
+  }
+  console.log(filters);
+  console.log(sub);
+  
+  return filters;
 }
-        
-        makeFilter(new Date(2020,0,1))
-        
-        // module.exports = { makeFilter };
+
+module.exports = { makeFilter };
