@@ -1,5 +1,8 @@
 # Uso de date-fns
 
+![](https://raw.githubusercontent.com/Angelozam17/challenge-javascript-12/master/src/assets/test.png)
+
+
 La manipulación de fechas en JS puede ser compleja usando la lib de date-dns hace que sea más facíl.
 
 # RETO 1
