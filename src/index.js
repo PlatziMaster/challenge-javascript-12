@@ -1,10 +1,12 @@
+// const moment = require('moment');
+// console.log(moment(today).format('YYYY/MM/DD'));
+
 const format = require('date-fns/format');
 const sub = require('date-fns/sub');
 const startOfYear = require('date-fns/startOfYear');
 const endOfYear = require('date-fns/endOfYear');
 const startOfMonth = require('date-fns/startOfMonth');
 const endOfMonth = require('date-fns/endOfMonth');
-
 const esLocale = require('date-fns/locale/es');
 
 const today = new Date();
@@ -18,8 +20,8 @@ let filters = [
     endAt: todayFormat
   },
   {
-    label: 'Últimos 28 días',
-    startAt: format(sub(today, {days: 28}), 'yyyy/MM/dd'),
+    label: 'Últimos 30 días',
+    startAt: format(sub(today, {days: 30}), 'yyyy/MM/dd'),
     endAt: todayFormat
   },
   {
@@ -39,21 +41,19 @@ let filters = [
   },
   {
     label: '2019',
-    startAt: format(startOfYear(sub(today, {years: 1})), 'yyyy/MM/dd'),
-    endAt: format(endOfYear(sub(today, {years: 1})), 'yyyy/MM/dd')
+    startAt: format(startOfYear(sub(today, {days: 365})), 'yyyy/MM/dd'),
+    endAt: format(endOfYear(sub(today, {days: 365})), 'yyyy/MM/dd')
   },
 ];
 
-for (let index = 0; index < 3; index++) {
+for (let index = 1; index <= 3; index++) {
+  console.log(index);
+  const prevMonth = sub(today, {months: index});
   filters.push({
-    label: format(sub(today, {months: index}), 'MMMM', {locale: esLocale}),
-    startAt: format(startOfMonth(sub(today, {months: index})), 'yyyy/MM/dd'),
-    endAt: format(endOfMonth(sub(today, {months: index})), 'yyyy/MM/dd')
+    label: format(prevMonth, 'MMMM', {locale: esLocale}),
+    startAt: format(startOfMonth(prevMonth), 'yyyy/MM/dd'),
+    endAt: format(endOfMonth(prevMonth), 'yyyy/MM/dd'),
   });
 }
 
 console.log(filters);
-
-
-// const moment = require('moment');
-// console.log(moment(today).format('YYYY/MM/DD'));

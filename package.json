@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "date-fns": "^2.11.1"
+    "date-fns": "^2.11.1",
+    "moment": "^2.25.3"
   },
   "devDependencies": {
     "jest": "^25.2.7"
