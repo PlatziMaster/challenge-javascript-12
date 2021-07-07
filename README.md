@@ -40,6 +40,7 @@ Ejemplo: (con base en `new Date(2020,0,1)` como fecha de entrada)
   { label: '2019', startAt: '2019/01/01', endAt: '2019/12/31' },
   { label: '2018', startAt: '2018/01/01', endAt: '2018/12/31' },
   { label: '2017', startAt: '2017/01/01', endAt: '2017/12/31' },
+  
   { label: 'diciembre', startAt: '2019/12/01', endAt: '2019/12/31' },
   { label: 'noviembre', startAt: '2019/11/01', endAt: '2019/11/30' },
   { label: 'octubre', startAt: '2019/10/01', endAt: '2019/10/31' }
